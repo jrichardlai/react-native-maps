@@ -10,6 +10,7 @@ var DisplayLatLng = require('./examples/DisplayLatLng');
 var ViewsAsMarkers = require('./examples/ViewsAsMarkers');
 var EventListener = require('./examples/EventListener');
 var MarkerTypes = require('./examples/MarkerTypes');
+var DraggableMarkers = require('./examples/DraggableMarkers');
 var PolygonCreator = require('./examples/PolygonCreator');
 var AnimatedViews = require('./examples/AnimatedViews');
 var AnimatedMarkers = require('./examples/AnimatedMarkers');
@@ -64,22 +65,24 @@ var App = React.createClass({
 
 
   render() {
-    return this.renderExamples([
-      [DisplayLatLng, 'Tracking Position'],
-      [ViewsAsMarkers, 'Arbitrary Views as Markers'],
-      [EventListener, 'Events'],
-      [MarkerTypes, 'Image Based Markers'],
-      [PolygonCreator, 'Polygon Creator'],
-      [AnimatedViews, 'Animating with MapViews'],
-      [AnimatedMarkers, 'Animated Marker Position'],
-      [Callouts, 'Custom Callouts'],
-      [Overlays, 'Circles, Polygons, and Polylines'],
-      [DefaultMarkers, 'Default Markers'],
-    ]);
+    //return this.renderExamples([
+    //  [DisplayLatLng, 'Tracking Position'],
+    //  [ViewsAsMarkers, 'Arbitrary Views as Markers'],
+    //  [EventListener, 'Events'],
+    //  [MarkerTypes, 'Image Based Markers'],
+    //  [DraggableMarkers, 'Draggable Markers'],
+    //  [PolygonCreator, 'Polygon Creator'],
+    //  [AnimatedViews, 'Animating with MapViews'],
+    //  [AnimatedMarkers, 'Animated Marker Position'],
+    //  [Callouts, 'Custom Callouts'],
+    //  [Overlays, 'Circles, Polygons, and Polylines'],
+    //  [DefaultMarkers, 'Default Markers'],
+    //]);
     //return <DisplayLatLng />;
     //return <ViewsAsMarkers />;
     //return <EventListener />;
     //return <MarkerTypes />;
+    return <DraggableMarkers />;
     //return <PolygonCreator />;
     //return <AnimatedViews />;
     //return <Callouts />;

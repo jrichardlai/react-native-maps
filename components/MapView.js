@@ -233,6 +233,12 @@ var MapView = React.createClass({
      */
     onCalloutPress: PropTypes.func,
 
+    onMarkerDragStart: PropTypes.func,
+
+    onMarkerDrag: PropTypes.func,
+
+    onMarkerDragEnd: PropTypes.func,
+
   },
 
   getInitialState: function() {

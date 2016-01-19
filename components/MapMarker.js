@@ -160,6 +160,8 @@ var MapMarker = React.createClass({
      */
     flat: PropTypes.bool,
 
+    draggable: PropTypes.bool,
+
     /**
      * Callback that is called when the user presses on the marker
      */
