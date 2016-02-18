@@ -1,9 +1,12 @@
 package com.AirMaps;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.view.View;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
@@ -78,12 +81,12 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
 
         return view;
     }
-    
+
     @Override
     public void onDropViewInstance(AirMapView view) {
         view.doDestroy();
         super.onDropViewInstance(view);
-    }    
+    }
 
     private void emitMapError (String message, String type) {
         WritableMap error = Arguments.createMap();
@@ -149,6 +152,11 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
     @ReactProp(name="pitchEnabled", defaultBoolean = false)
     public void setPitchEnabled(AirMapView view, boolean pitchEnabled) {
         view.map.getUiSettings().setTiltGesturesEnabled(pitchEnabled);
+    }
+
+    @ReactProp(name="cacheEnabled", defaultBoolean = false)
+    public void setCacheEnabled(AirMapView view, boolean cacheEnabled) {
+        view.setCacheEnabled(cacheEnabled);
     }
 
     @Override
