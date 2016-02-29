@@ -14,6 +14,7 @@ var {
   Animated,
   requireNativeComponent,
   NativeModules,
+  ColorPropType,
 } = ReactNative;
 
 var MapMarker = require('./MapMarker');
@@ -94,6 +95,20 @@ var MapView = React.createClass({
      *
      */
     cacheEnabled: PropTypes.bool,
+
+    /**
+     * Loading background color while generating map cache image
+     * Default color is light gray.
+     *
+     */
+    cacheLoadingBackgroundColor: ColorPropType,
+
+    /**
+     * Loading indicator color while generating map cache image
+     * Default color is default ProgressBar color.
+     *
+     */
+    cacheLoadingIndicatorColor: ColorPropType,
 
     /**
      * If `false` the user won't be able to change the map region being displayed.

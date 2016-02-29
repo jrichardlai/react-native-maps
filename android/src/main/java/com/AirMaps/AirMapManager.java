@@ -1,7 +1,12 @@
 package com.AirMaps;
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
+import android.os.Build;
+import android.support.v7.internal.widget.ThemeUtils;
 import android.view.View;
 
 import com.facebook.react.bridge.Arguments;
@@ -50,10 +55,10 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
     private AirMapCircleManager circleManager;
 
     public AirMapManager(
-        AirMapMarkerManager markerManager,
-        AirMapPolylineManager polylineManager,
-        AirMapPolygonManager polygonManager,
-        AirMapCircleManager circleManager
+            AirMapMarkerManager markerManager,
+            AirMapPolylineManager polylineManager,
+            AirMapPolygonManager polygonManager,
+            AirMapCircleManager circleManager
     ) {
         super();
         this.markerManager = markerManager;
@@ -94,8 +99,8 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         error.putString("type", type);
 
         reactContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit("onError", error);
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit("onError", error);
     }
 
     @ReactProp(name="region")
@@ -157,6 +162,45 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
     @ReactProp(name="cacheEnabled", defaultBoolean = false)
     public void setCacheEnabled(AirMapView view, boolean cacheEnabled) {
         view.setCacheEnabled(cacheEnabled);
+    }
+
+    @ReactProp(name="cacheLoadingBackgroundColor", customType="Color")
+    public void setCacheLoadingBackgroundColor(AirMapView view, @Nullable Integer cacheLoadingBackgroundColor) {
+        if (cacheLoadingBackgroundColor == null) {
+            view.mapLoadingLayout.setBackgroundColor(Color.TRANSPARENT);
+        } else {
+            view.mapLoadingLayout.setBackgroundColor(cacheLoadingBackgroundColor);
+        }
+    }
+
+    @ReactProp(name="cacheLoadingIndicatorColor", customType="Color")
+    public void setCacheLoadingIndicatorColor(AirMapView view, @Nullable Integer cacheLoadingIndicatorColor) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ColorStateList stateList = ColorStateList.valueOf(Color.TRANSPARENT);
+
+            if (cacheLoadingIndicatorColor != null) {
+                stateList = ColorStateList.valueOf(cacheLoadingIndicatorColor);
+            }
+
+            view.mapLoadingProgressBar.setProgressTintList(stateList);
+            view.mapLoadingProgressBar.setSecondaryProgressTintList(stateList);
+            view.mapLoadingProgressBar.setIndeterminateTintList(stateList);
+        } else {
+            int color = Color.TRANSPARENT;
+
+            if (cacheLoadingIndicatorColor != null) {
+                color = cacheLoadingIndicatorColor;
+            }
+
+            PorterDuff.Mode mode = PorterDuff.Mode.SRC_IN;
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+                mode = PorterDuff.Mode.MULTIPLY;
+            }
+            if (view.mapLoadingProgressBar.getIndeterminateDrawable() != null)
+                view.mapLoadingProgressBar.getIndeterminateDrawable().setColorFilter(color, mode);
+            if (view.mapLoadingProgressBar.getProgressDrawable() != null)
+                view.mapLoadingProgressBar.getProgressDrawable().setColorFilter(color, mode);
+        }
     }
 
     @Override
@@ -221,9 +265,9 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
     @Override
     public @Nullable Map<String, Integer> getCommandsMap() {
         return MapBuilder.of(
-            "animateToRegion", ANIMATE_TO_REGION,
-            "animateToCoordinate", ANIMATE_TO_COORDINATE,
-            "fitToElements", FIT_TO_ELEMENTS
+                "animateToRegion", ANIMATE_TO_REGION,
+                "animateToCoordinate", ANIMATE_TO_COORDINATE,
+                "fitToElements", FIT_TO_ELEMENTS
         );
     }
 
