@@ -17,6 +17,7 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.events.EventDispatcher;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,10 +61,8 @@ public class AirMapView
 
     final EventDispatcher eventDispatcher;
 
-
-
-    public AirMapView(ThemedReactContext context, AirMapManager manager) {
-        super(context);
+    public AirMapView(ThemedReactContext context, AirMapManager manager, GoogleMapOptions googleMapOptions) {
+        super(context, googleMapOptions);
         this.manager = manager;
 
         super.onCreate(null);
