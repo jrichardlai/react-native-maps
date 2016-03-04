@@ -15,6 +15,7 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.ViewGroupManager;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -45,6 +46,8 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
     private AirMapPolygonManager polygonManager;
     private AirMapCircleManager circleManager;
 
+    protected GoogleMapOptions googleMapOptions;
+
     public AirMapManager(
         AirMapMarkerManager markerManager,
         AirMapPolylineManager polylineManager,
@@ -56,6 +59,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         this.polylineManager = polylineManager;
         this.polygonManager = polygonManager;
         this.circleManager = circleManager;
+        this.googleMapOptions = new GoogleMapOptions();
     }
 
     @Override
@@ -66,7 +70,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
     @Override
     protected AirMapView createViewInstance(ThemedReactContext context) {
         reactContext = context;
-        AirMapView view = new AirMapView(context, this);
+        AirMapView view = new AirMapView(context, this, this.googleMapOptions);
 
         try {
             MapsInitializer.initialize(context.getApplicationContext());
