@@ -404,6 +404,7 @@ public class AirMapView
                 isTouchDown = true;
                 break;
             case (MotionEvent.ACTION_MOVE):
+                onPanDrag(ev);
                 startMonitoringRegion();
                 break;
             case (MotionEvent.ACTION_UP):
@@ -474,5 +475,12 @@ public class AirMapView
         AirMapMarker markerView = markerMap.get(marker);
         event = makeClickEventData(marker.getPosition());
         manager.pushEvent(markerView, "onDragEnd", event);
+    }
+
+    public void onPanDrag(MotionEvent ev) {
+        Point point = new Point((int) ev.getX(), (int) ev.getY());
+        LatLng coords = this.map.getProjection().fromScreenLocation(point);
+        WritableMap event = makeClickEventData(coords);
+        manager.pushEvent(this, "onPanDrag", event);
     }
 }
