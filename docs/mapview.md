@@ -27,6 +27,7 @@
 | `onRegionChange` | `Region` | Fired when the map ends panning or zooming.
 | `onRegionChangeComplete` | `Region` | Fired when the map ends panning or zooming.
 | `onPress` | `{ coordinate: LatLng, position: Point }` | Callback that is called when user taps on the map.
+| `onPanDrag` | `{ coordinate: LatLng, position: Point }` | Callback that is called when user presses and drags the map.
 | `onLongPress` | `{ coordinate: LatLng, position: Point }` | Callback that is called when user makes a "long press" somewhere on the map.
 | `onMarkerPress` |  | Callback that is called when a marker on the map is tapped by the user.
 | `onMarkerSelect` |  | Callback that is called when a marker on the map becomes selected. This will be called when the callout for that marker is about to be shown.
