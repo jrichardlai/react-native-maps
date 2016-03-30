@@ -11,6 +11,7 @@ var {
   requireNativeComponent,
   NativeModules,
   PropTypes,
+  ColorPropType,
 } = React;
 
 var MapMarker = require('./MapMarker');
@@ -75,6 +76,34 @@ var MapView = React.createClass({
      *
      */
     rotateEnabled: PropTypes.bool,
+
+    /**
+     * If `true` the map will be cached to an Image for performance
+     * Default value is `false`. Only available in Android for now
+     *
+     */
+    cacheEnabled: PropTypes.bool,
+
+    /**
+     * If `true` the map will be showing a loading indicator
+     * Default value is `false`. Only available in Android for now
+     *
+     */
+    loadingEnabled: PropTypes.bool,
+
+    /**
+     * Loading background color while generating map cache image or loading the map
+     * Default color is light gray. Only available in Android for now
+     *
+     */
+    loadingBackgroundColor: ColorPropType,
+
+    /**
+     * Loading indicator color while generating map cache image or loading the map
+     * Default color is default ProgressBar color. Only available in Android for now
+     *
+     */
+    loadingIndicatorColor: ColorPropType,
 
     /**
      * If `false` the user won't be able to change the map region being displayed.

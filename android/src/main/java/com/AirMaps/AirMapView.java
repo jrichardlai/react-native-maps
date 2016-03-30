@@ -1,15 +1,23 @@
 package com.AirMaps;
 
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
@@ -42,11 +50,16 @@ public class AirMapView
         OnMapReadyCallback
 {
     public GoogleMap map;
+    public ProgressBar mapLoadingProgressBar;
+    public RelativeLayout mapLoadingLayout;
+    public ImageView cacheImageView;
+    private Boolean isMapLoaded = false;
 
     private LatLngBounds boundsToMove;
     private boolean showUserLocation = false;
     private boolean isMonitoringRegion = false;
     private boolean isTouchDown = false;
+    private boolean cacheEnabled = false;
 
     private ArrayList<AirMapFeature> features = new ArrayList<>();
     private HashMap<Marker, AirMapMarker> markerMap = new HashMap<>();
@@ -74,11 +87,11 @@ public class AirMapView
 
         final AirMapView view = this;
         scaleDetector = new ScaleGestureDetector(context, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
-//            @Override
-//            public boolean onScale(ScaleGestureDetector detector) {
-//                Log.d("AirMapView", "onScale");
-//                return false;
-//            }
+            //            @Override
+            //            public boolean onScale(ScaleGestureDetector detector) {
+            //                Log.d("AirMapView", "onScale");
+            //                return false;
+            //            }
 
             @Override
             public boolean onScaleBegin (ScaleGestureDetector detector) {
@@ -102,6 +115,26 @@ public class AirMapView
         });
 
         eventDispatcher = context.getNativeModule(UIManagerModule.class).getEventDispatcher();
+
+        this.mapLoadingLayout = new RelativeLayout(context);
+        this.mapLoadingLayout.setBackgroundColor(Color.LTGRAY);
+        this.addView(this.mapLoadingLayout,
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
+                        ViewGroup.LayoutParams.FILL_PARENT));
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        this.mapLoadingProgressBar = new ProgressBar(context);
+        this.mapLoadingProgressBar.setIndeterminate(true);
+        this.mapLoadingLayout.addView(this.mapLoadingProgressBar, params);
+
+        this.mapLoadingLayout.setVisibility(View.INVISIBLE);
+
+
+        this.cacheImageView = new ImageView(context);
+        this.addView(this.cacheImageView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        this.cacheImageView.setAlpha(0.0f);
     }
 
     @Override
@@ -181,6 +214,13 @@ public class AirMapView
             }
         });
 
+        map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override public void onMapLoaded() {
+                isMapLoaded = true;
+                AirMapView.this.cacheView();
+            }
+        });
+
         // We need to be sure to disable location-tracking when app enters background, in-case some other module
         // has acquired a wake-lock and is controlling location-updates, otherwise, location-manager will be left
         // updating location constantly, killing the battery, even though some other location-mgmt module may
@@ -254,6 +294,17 @@ public class AirMapView
     public void setShowsUserLocation(boolean showUserLocation) {
         this.showUserLocation = showUserLocation; // hold onto this for lifecycle handling
         map.setMyLocationEnabled(showUserLocation);
+    }
+
+    public void setCacheEnabled(boolean cacheEnabled) {
+        this.cacheEnabled = cacheEnabled;
+        this.cacheView();
+    }
+
+    public void enableMapLoading(boolean loadingEnabled) {
+        if (loadingEnabled && !this.isMapLoaded) {
+            this.mapLoadingLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     public void addFeature(View child, int index) {
@@ -482,5 +533,27 @@ public class AirMapView
         LatLng coords = this.map.getProjection().fromScreenLocation(point);
         WritableMap event = makeClickEventData(coords);
         manager.pushEvent(this, "onPanDrag", event);
+    }
+
+    private void cacheView() {
+        if (this.cacheEnabled) {
+            this.cacheImageView.setAlpha(0.0f);
+            this.mapLoadingLayout.setVisibility(View.VISIBLE);
+            if (this.isMapLoaded) {
+                this.map.snapshot(new GoogleMap.SnapshotReadyCallback() {
+                    @Override public void onSnapshotReady(Bitmap bitmap) {
+                        AirMapView.this.cacheImageView.setImageBitmap(bitmap);
+                        AirMapView.this.cacheImageView.setAlpha(1.0f);
+                        AirMapView.this.mapLoadingLayout.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+        }
+        else {
+            this.cacheImageView.setAlpha(0.0f);
+            if (this.isMapLoaded) {
+                this.mapLoadingLayout.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 }
