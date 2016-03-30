@@ -109,6 +109,7 @@ public class AirMapView
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                onPanDrag(e2);
                 view.startMonitoringRegion();
                 return false;
             }
@@ -455,7 +456,6 @@ public class AirMapView
                 isTouchDown = true;
                 break;
             case (MotionEvent.ACTION_MOVE):
-                onPanDrag(ev);
                 startMonitoringRegion();
                 break;
             case (MotionEvent.ACTION_UP):
