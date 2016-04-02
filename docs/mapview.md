@@ -19,10 +19,10 @@
 | `rotateEnabled` | `Boolean` | `true` | If `false` the user won't be able to pinch/rotate the map.
 | `scrollEnabled` | `Boolean` | `true` | If `false` the user won't be able to change the map region being displayed.
 | `pitchEnabled` | `Boolean` | `true` | If `false` the user won't be able to adjust the camera’s pitch angle.
-| `cacheEnabled` | `Boolean` | `false` | If `true` map will be cached and displayed as a image instead of being interactable, for performance usage. **Android only**
-| `loadingEnabled` | `Boolean` | `false` | If `true` a loading indicator will show while the map is loading. **Android only**
-| `loadingIndicatorColor` | `Color` | `null` | Sets loading indicator color if not null, null will be treated as transparent color. **Android only**
-| `loadingBackgroundColor` | `Color` | `null` | Sets loading background color if not null, null will be treated as transparent color. **Android only**
+| `cacheEnabled` | `Boolean` | `false` | If `true` map will be cached and displayed as a image instead of being interactable, for performance usage.
+| `loadingEnabled` | `Boolean` | `false` | If `true` a loading indicator will show while the map is loading.
+| `loadingIndicatorColor` | `Color` | `null` | Sets loading indicator color if not null, null will be treated as transparent color.
+| `loadingBackgroundColor` | `Color` | `null` | Sets loading background color if not null, null will be treated as transparent color.
 
 
 
