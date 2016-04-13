@@ -50,6 +50,12 @@ var Callouts = React.createClass({
             longitude: LONGITUDE - SPACE,
           },
         },
+        {
+          coordinate: {
+            latitude: LATITUDE - SPACE,
+            longitude: LONGITUDE - SPACE,
+          },
+        },
       ],
     };
   },
@@ -93,6 +99,13 @@ var Callouts = React.createClass({
               <CustomCallout>
                 <Text style={{ color: '#fff' }}>This is a custom callout bubble view</Text>
               </CustomCallout>
+            </MapView.Callout>
+          </MapView.Marker>
+          <MapView.Marker ref="m4" coordinate={markers[3].coordinate}>
+            <MapView.Callout>
+              <View>
+                <Image source={require('./assets/flag-blue.png')} />
+              </View>
             </MapView.Callout>
           </MapView.Marker>
         </MapView>
