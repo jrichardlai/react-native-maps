@@ -66,6 +66,7 @@ public class AirMapView
     private boolean isMonitoringRegion = false;
     private boolean isTouchDown = false;
     private boolean cacheEnabled = false;
+    private boolean handlePanDrag = false;
 
     private ArrayList<AirMapFeature> features = new ArrayList<>();
     private HashMap<Marker, AirMapMarker> markerMap = new HashMap<>();
@@ -116,6 +117,9 @@ public class AirMapView
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                if (handlePanDrag) {
+                    onPanDrag(e2);
+                }
                 view.startMonitoringRegion();
                 return false;
             }
@@ -350,6 +354,10 @@ public class AirMapView
                     this.mapLoadingProgressBar.getProgressDrawable().setColorFilter(color, mode);
             }
         }
+    }
+
+    public void setHandlePanDrag(boolean handlePanDrag) {
+        this.handlePanDrag = handlePanDrag;
     }
 
     public void addFeature(View child, int index) {
@@ -597,7 +605,7 @@ public class AirMapView
         this.setLoadingBackgroundColor(this.loadingBackgroundColor);
         return this.mapLoadingLayout;
     }
-    
+
     private ImageView getCacheImageView() {
         if (this.cacheImageView == null) {
             this.cacheImageView = new ImageView(getContext());
@@ -652,5 +660,12 @@ public class AirMapView
                 this.removeMapLoadingLayoutView();
             }
         }
+    }
+
+    public void onPanDrag(MotionEvent ev) {
+        Point point = new Point((int) ev.getX(), (int) ev.getY());
+        LatLng coords = this.map.getProjection().fromScreenLocation(point);
+        WritableMap event = makeClickEventData(coords);
+        manager.pushEvent(this, "onPanDrag", event);
     }
 }
