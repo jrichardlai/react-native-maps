@@ -118,6 +118,12 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
         view.setShowsUserLocation(showUserLocation);
     }
 
+    // This is a private prop to improve performance of panDrag by disabling it when the callback is not set
+    @ReactProp(name="handlePanDrag", defaultBoolean = false)
+    public void setHandlePanDrag(AirMapView view, boolean handlePanDrag) {
+        view.setHandlePanDrag(handlePanDrag);
+    }
+
     @ReactProp(name="showsTraffic", defaultBoolean = false)
     public void setShowTraffic(AirMapView view, boolean showTraffic) {
         view.map.setTrafficEnabled(showTraffic);
@@ -200,6 +206,11 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
             if (view.mapLoadingProgressBar.getProgressDrawable() != null)
                 view.mapLoadingProgressBar.getProgressDrawable().setColorFilter(color, mode);
         }
+    }
+
+    @ReactProp(name="pitchEnabled", defaultBoolean = false)
+    public void setPitchEnabled(AirMapView view, boolean pitchEnabled) {
+        view.map.getUiSettings().setTiltGesturesEnabled(pitchEnabled);
     }
 
     @Override

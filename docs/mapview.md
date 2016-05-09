@@ -17,10 +17,12 @@
 | `zoomEnabled` | `Boolean` | `true` | If `false` the user won't be able to pinch/zoom the map.
 | `rotateEnabled` | `Boolean` | `true` | If `false` the user won't be able to pinch/rotate the map.
 | `scrollEnabled` | `Boolean` | `true` | If `false` the user won't be able to change the map region being displayed.
+<<<<<<< HEAD
 | `cacheEnabled` | `Boolean` | `false` | If `true` map will be cached and displayed as a image instead of being interactable, for performance usage. **Android only**
 | `loadingEnabled` | `Boolean` | `false` | If `true` a loading indicator will show while the map is loading. **Android only**
 | `loadingIndicatorColor` | `Color` | `null` | Sets loading indicator color if not null, null will be treated as transparent color. **Android only**
 | `loadingBackgroundColor` | `Color` | `null` | Sets loading background color if not null, null will be treated as transparent color. **Android only**
+| `pitchEnabled` | `Boolean` | `true` | If `false` the user won't be able to adjust the camera’s pitch angle.
 
 
 
@@ -31,7 +33,7 @@
 | `onRegionChange` | `Region` | Fired when the map ends panning or zooming.
 | `onRegionChangeComplete` | `Region` | Fired when the map ends panning or zooming.
 | `onPress` | `{ coordinate: LatLng, position: Point }` | Callback that is called when user taps on the map.
-| `onPanDrag` | `{ coordinate: LatLng, position: Point }` | Callback that is called when user presses and drags the map.
+| `onPanDrag` | `{ coordinate: LatLng, position: Point }` | Callback that is called when user presses and drags the map. **NOTE**: for iOS `scrollEnabled` should be set to false to trigger the event
 | `onLongPress` | `{ coordinate: LatLng, position: Point }` | Callback that is called when user makes a "long press" somewhere on the map.
 | `onMarkerPress` |  | Callback that is called when a marker on the map is tapped by the user.
 | `onMarkerSelect` |  | Callback that is called when a marker on the map becomes selected. This will be called when the callout for that marker is about to be shown.
@@ -47,9 +49,9 @@
 
 | Method Name | Arguments | Notes
 |---|---|---|
-| `animateToRegion` | `region: Region`, `duration: Number` | 
-| `animateToCoordinate` | `region: Coordinate`, `duration: Number` | 
-| `fitToElements` | `animated: Boolean` | 
+| `animateToRegion` | `region: Region`, `duration: Number` |
+| `animateToCoordinate` | `region: Coordinate`, `duration: Number` |
+| `fitToElements` | `animated: Boolean` |
 
 
 

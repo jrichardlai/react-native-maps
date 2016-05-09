@@ -113,6 +113,13 @@ var MapView = React.createClass({
     scrollEnabled: PropTypes.bool,
 
     /**
+     * If `false` the user won't be able to adjust the camera’s pitch angle.
+     * Default value is `true`.
+     *
+     */
+    pitchEnabled: PropTypes.bool,
+
+    /**
      * A Boolean indicating whether the map shows scale information.
      * Default value is `false`
      *
@@ -400,6 +407,9 @@ var MapView = React.createClass({
       if (Platform.OS === 'ios' && props.mapType === 'terrain') {
         props.mapType = 'standard';
       }
+      if (Platform.OS === 'android') {
+        props.handlePanDrag = !!props.onPanDrag;
+      }
     } else {
       props = {
         region: null,
@@ -420,6 +430,7 @@ var AIRMap = requireNativeComponent('AIRMap', MapView, {
   nativeOnly: {
     onChange: true,
     onMapReady: true,
+    handlePanDrag: true,
   },
 });
 
