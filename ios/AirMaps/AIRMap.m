@@ -305,15 +305,13 @@ const CGFloat AIRMapZoomBoundBuffer = 0.01;
                 self.cacheImageView.hidden = YES;
                 self.cacheImageView.image = nil;
             }
-            self.scrollEnabled = YES;
-            self.zoomEnabled = YES;
         }
         else {
             self.cacheImageView.image = nil;
             self.cacheImageView.hidden = YES;
             self.scrollEnabled = NO;
             self.zoomEnabled = NO;
-            
+
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 self.cacheImageView.image = nil;
                 self.cacheImageView.hidden = YES;
@@ -321,7 +319,7 @@ const CGFloat AIRMapZoomBoundBuffer = 0.01;
                 [self.layer renderInContext:UIGraphicsGetCurrentContext()];
                 UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
                 UIGraphicsEndImageContext();
-                
+
                 self.cacheImageView.image = image;
                 self.cacheImageView.hidden = NO;
             });
