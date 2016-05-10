@@ -5,6 +5,7 @@ var {
   Dimensions,
   StyleSheet,
   ListView,
+  TouchableWithoutFeedback,
 } = React;
 
 var MapView = require('react-native-maps');
@@ -31,22 +32,24 @@ var CachedMap = React.createClass({
             <View
               style={styles.item}>
               <Text>{region.name}</Text>
-              <MapView
-                style={{
-                  width: width - (HORIZONTAL_PADDING*2),
-                  height: width - (HORIZONTAL_PADDING*2),
-                }}
-                initialRegion={region}
-                cacheEnabled={true}
-                loadingIndicatorColor={"#666666"}
-                loadingBackgroundColor={"#eeeeee"}>
-                <MapView.Marker
-                  coordinate={region}
-                  centerOffset={{ x: -18, y: -60 }}
-                  anchor={{ x: 0.69, y: 1 }}
-                  image={require('./assets/flag-blue.png')}
-                />
-              </MapView>
+              <TouchableWithoutFeedback onPress={() => alert(region.name)}>
+                <MapView
+                  style={{
+                    width: width - (HORIZONTAL_PADDING*2),
+                    height: width - (HORIZONTAL_PADDING*2),
+                  }}
+                  initialRegion={region}
+                  cacheEnabled={true}
+                  loadingIndicatorColor={"#666666"}
+                  loadingBackgroundColor={"#eeeeee"}>
+                  <MapView.Marker
+                    coordinate={region}
+                    centerOffset={{ x: -18, y: -60 }}
+                    anchor={{ x: 0.69, y: 1 }}
+                    image={require('./assets/flag-blue.png')}
+                  />
+                </MapView>
+              </TouchableWithoutFeedback>
               <View style={styles.divider} />
             </View>
           );
@@ -1775,7 +1778,7 @@ const COUNTRIES = [
     "longitude": 29.154857,
     "latitudeDelta": 10.0
   }
-]; 
+];
 
 
 module.exports = CachedMap;
