@@ -15,6 +15,7 @@
 #import "AIRMapPolyline.h"
 #import "AIRMapPolygon.h"
 #import "AIRMapCircle.h"
+#import <QuartzCore/QuartzCore.h>
 
 const CLLocationDegrees AIRMapDefaultSpan = 0.005;
 const NSTimeInterval AIRMapRegionChangeObserveInterval = 0.1;
@@ -28,6 +29,11 @@ const CGFloat AIRMapZoomBoundBuffer = 0.01;
 
 @end
 
+@interface AIRMap ()
+
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
+
+@end
 
 @implementation AIRMap
 {
@@ -215,6 +221,47 @@ const CGFloat AIRMapZoomBoundBuffer = 0.01;
     }
 }
 
+- (void)setCacheEnabled:(BOOL)cacheEnabled {
+    _cacheEnabled = cacheEnabled;
+    if (self.cacheEnabled && self.cacheImageView.image == nil) {
+        self.loadingView.hidden = NO;
+        [self.activityIndicatorView startAnimating];
+    }
+    else {
+        if (_loadingView != nil) {
+            self.loadingView.hidden = YES;
+        }
+    }
+}
+
+- (void)setLoadingEnabled:(BOOL)loadingEnabled {
+    _loadingEnabled = loadingEnabled;
+    if (!self.hasShownInitialLoading) {
+        self.loadingView.hidden = !self.loadingEnabled;
+    }
+    else {
+        if (_loadingView != nil) {
+            self.loadingView.hidden = YES;
+        }
+    }
+}
+
+- (UIColor *)loadingBackgroundColor {
+    return self.loadingView.backgroundColor;
+}
+
+- (void)setLoadingBackgroundColor:(UIColor *)loadingBackgroundColor {
+    self.loadingView.backgroundColor = loadingBackgroundColor;
+}
+
+- (UIColor *)loadingIndicatorColor {
+    return self.activityIndicatorView.color;
+}
+
+- (void)setLoadingIndicatorColor:(UIColor *)loadingIndicatorColor {
+    self.activityIndicatorView.color = loadingIndicatorColor;
+}
+
 // Include properties of MKMapView which are only available on iOS 9+
 // and check if their selector is available before calling super method.
 
@@ -258,6 +305,92 @@ const CGFloat AIRMapZoomBoundBuffer = 0.01;
     } else {
         return NO;
     }
+}
+
+- (void)cacheViewIfNeeded {
+    if (self.hasShownInitialLoading) {
+        if (!self.cacheEnabled) {
+            if (_cacheImageView != nil) {
+                self.cacheImageView.hidden = YES;
+                self.cacheImageView.image = nil;
+            }
+        }
+        else {
+            self.cacheImageView.image = nil;
+            self.cacheImageView.hidden = YES;
+            self.scrollEnabled = NO;
+            self.zoomEnabled = NO;
+
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.cacheImageView.image = nil;
+                self.cacheImageView.hidden = YES;
+                UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, 0.0);
+                [self.layer renderInContext:UIGraphicsGetCurrentContext()];
+                UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+
+                self.cacheImageView.image = image;
+                self.cacheImageView.hidden = NO;
+            });
+        }
+    }
+}
+
+- (void)beginLoading {
+    if ((!self.hasShownInitialLoading && self.loadingEnabled) || (self.cacheEnabled && self.cacheImageView.image == nil)) {
+        self.loadingView.hidden = NO;
+        [self.activityIndicatorView startAnimating];
+    }
+    else {
+        if (_loadingView != nil) {
+            self.loadingView.hidden = YES;
+        }
+    }
+}
+
+- (void)finishLoading {
+    self.hasShownInitialLoading = YES;
+    if (_loadingView != nil) {
+        self.loadingView.hidden = YES;
+    }
+    [self cacheViewIfNeeded];
+}
+
+- (UIActivityIndicatorView *)activityIndicatorView {
+    if (_activityIndicatorView == nil) {
+        _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activityIndicatorView.center = self.loadingView.center;
+        _activityIndicatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    }
+    [self.loadingView addSubview:_activityIndicatorView];
+    return _activityIndicatorView;
+}
+
+- (UIView *)loadingView {
+    if (_loadingView == nil) {
+        _loadingView = [[UIView alloc] initWithFrame:self.bounds];
+        _loadingView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        _loadingView.backgroundColor = [UIColor whiteColor];
+        [self addSubview:_loadingView];
+        _loadingView.hidden = NO;
+    }
+    return _loadingView;
+}
+
+- (UIImageView *)cacheImageView {
+    if (_cacheImageView == nil) {
+        _cacheImageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        _cacheImageView.contentMode = UIViewContentModeCenter;
+        _cacheImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        [self addSubview:self.cacheImageView];
+        _cacheImageView.hidden = YES;
+    }
+    return _cacheImageView;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self cacheViewIfNeeded];
 }
 
 @end
