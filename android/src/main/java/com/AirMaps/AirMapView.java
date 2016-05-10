@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
-import android.support.v7.internal.widget.ThemeUtils;
 import android.os.Handler;
 import android.os.Build;
 import android.support.v4.view.GestureDetectorCompat;
@@ -328,9 +327,9 @@ public class AirMapView
         this.loadingIndicatorColor = loadingIndicatorColor;
         if (this.mapLoadingProgressBar != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ColorStateList progressTintList = ThemeUtils.getThemeAttrColorStateList(getContext(), android.R.attr.progressTint);
-                ColorStateList secondaryProgressTintList = ThemeUtils.getThemeAttrColorStateList(getContext(), android.R.attr.secondaryProgressTint);
-                ColorStateList indeterminateTintList = ThemeUtils.getThemeAttrColorStateList(getContext(), android.R.attr.indeterminateTint);
+                ColorStateList progressTintList = ColorStateList.valueOf(Color.TRANSPARENT);;
+                ColorStateList secondaryProgressTintList = ColorStateList.valueOf(Color.TRANSPARENT);
+                ColorStateList indeterminateTintList = ColorStateList.valueOf(Color.TRANSPARENT);
 
                 if (loadingIndicatorColor != null) {
                     progressTintList = ColorStateList.valueOf(loadingIndicatorColor);
@@ -342,7 +341,7 @@ public class AirMapView
                 this.mapLoadingProgressBar.setSecondaryProgressTintList(secondaryProgressTintList);
                 this.mapLoadingProgressBar.setIndeterminateTintList(indeterminateTintList);
             } else {
-                int color = ThemeUtils.getThemeAttrColor(getContext(), android.R.attr.color);
+                int color = Color.TRANSPARENT;
 
                 if (loadingIndicatorColor != null) {
                     color = loadingIndicatorColor;
