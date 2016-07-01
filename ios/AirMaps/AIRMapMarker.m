@@ -209,10 +209,9 @@
         _reloadImageCancellationBlock();
         _reloadImageCancellationBlock = nil;
     }
-    _reloadImageCancellationBlock = [_bridge.imageLoader loadImageWithTag:[RCTConvert NSURLRequest:_imageSrc]
+    _reloadImageCancellationBlock = [_bridge.imageLoader loadImageWithTag:_imageSrc
                                                                      size:self.bounds.size
                                                                     scale:RCTScreenScale()
-                                                                    clipped:YES
                                                                resizeMode:UIViewContentModeCenter
                                                             progressBlock:nil
                                                           completionBlock:^(NSError *error, UIImage *image) {
@@ -229,7 +228,7 @@
 - (void)setPinColor:(UIColor *)pinColor
 {
     _pinColor = pinColor;
-    
+
     if ([_pinView respondsToSelector:@selector(setPinTintColor:)]) {
         _pinView.pinTintColor = _pinColor;
     }
