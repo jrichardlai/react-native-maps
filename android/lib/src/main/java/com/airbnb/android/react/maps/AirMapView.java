@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.TileOverlay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +66,7 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     private boolean showUserLocation = false;
     private boolean isMonitoringRegion = false;
     private boolean isTouchDown = false;
+
     private boolean handlePanDrag = false;
     private boolean cacheEnabled = false;
     private boolean loadingEnabled = false;
@@ -77,10 +79,12 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
     private final Map<Polyline, AirMapPolyline> polylineMap = new HashMap<>();
     private final Map<Polygon, AirMapPolygon> polygonMap = new HashMap<>();
     private final Map<Circle, AirMapCircle> circleMap = new HashMap<>();
+    private final Map<TileOverlay, AirMapHeatmap> heatmapMap = new HashMap<>();
 
     private final ScaleGestureDetector scaleDetector;
     private final GestureDetectorCompat gestureDetector;
     private final AirMapManager manager;
+
     private LifecycleEventListener lifecycleListener;
     private OnLayoutChangeListener onLayoutChangeListener;
     private boolean paused = false;
@@ -410,6 +414,12 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
             features.add(index, circleView);
             Circle circle = (Circle) circleView.getFeature();
             circleMap.put(circle, circleView);
+        } else if (child instanceof AirMapHeatmap) {
+            AirMapHeatmap heatmapView = (AirMapHeatmap) child;
+            heatmapView.addToMap(map);
+            features.add(index, heatmapView);
+            TileOverlay heatmap = (TileOverlay)heatmapView.getFeature();
+            heatmapMap.put(heatmap, heatmapView);
         } else {
             // TODO(lmr): throw? User shouldn't be adding non-feature children.
         }
@@ -435,6 +445,8 @@ public class AirMapView extends MapView implements GoogleMap.InfoWindowAdapter,
             polygonMap.remove(feature.getFeature());
         } else if (feature instanceof AirMapCircle) {
             circleMap.remove(feature.getFeature());
+        } else if (feature instanceof AirMapHeatmap) {
+            heatmapMap.remove(feature.getFeature());
         }
         feature.removeFromMap(map);
     }
