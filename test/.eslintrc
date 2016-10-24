@@ -1,0 +1,16 @@
+{
+  "plugins": [
+    "mocha"
+  ],
+  "rules": {
+    "no-console": 0,
+    "import/no-extraneous-dependencies": [2, {"devDependencies": true}]
+  },
+  "globals": {
+    "before": true,
+    "it": true,
+    "beforeEach": true,
+    "after": true,
+    "describe": true,
+  }
+}
